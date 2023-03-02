@@ -1,5 +1,4 @@
-import math as m
-
+import numpy as np
 import matplotlib.pyplot as plt
 
 def read_table_with_der():
@@ -285,12 +284,18 @@ def main():
     print('-' * 43)  
     
     fig, ax = plt.subplots()
-    ax.plot([x[0] for x in table], [x[1] for x in table])
+    ax.plot([x[0] for x in table], [x[1] for x in table], label='Таблица 1')
+    
+    new_x = list(np.linspace(table[0][0], table[0][1]))
+    ax.plot(new_x, [approximate_newton(table, x, 5) for x in new_x], label='Апроксимация Ньютона (n = 5)')
+    ax.plot(new_x, [approximate_hermite(table, x, 5) for x in new_x], label='Апроксимация Эрмита (n = 5)')
+    ax.legend()
     ax.grid()
     
     fig_2, ax_2 = plt.subplots()
-    ax_2.plot([x[0] for x in table_1], [x[1] for x in table_1])
-    ax_2.plot([x[0] for x in table_2], [x[1] for x in table_2])
+    ax_2.plot([x[0] for x in table_1], [x[1] for x in table_1], label='Таблица 1')
+    ax_2.plot([x[0] for x in table_2], [x[1] for x in table_2], label='Таблица 2')
+    ax_2.legend()
     ax_2.grid()
     
     plt.show()
