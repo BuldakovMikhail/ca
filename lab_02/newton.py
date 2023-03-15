@@ -24,8 +24,8 @@ def select_points_newton(table, x, n):
     while pos < len(table) - 1 and table[pos][0] < x:
         pos += 1
     
-    if pos != 0 and abs(table[pos][0] - x) > abs(table[pos - 1][0] - x):
-        pos -= 1
+    # if pos != 0 and abs(table[pos][0] - x) > abs(table[pos - 1][0] - x):
+    #     pos -= 1
     
     
     new_table.append(table[pos].copy())    
