@@ -74,10 +74,10 @@ def system_solution(x_start, eps=1e-4):
 
 
 def func(x):
-    return 1 / np.sqrt(2 * np.pi) * np.exp(-x ** 2 / 2)
+    return 2 / np.sqrt(2 * np.pi) * np.exp(-x ** 2 / 2)
 
 
-def count_integral(x, n=100):
+def count_integral(x, n=1000):
     N = 2 * n
     steps = [x / N * i for i in range(N + 1)]
 
@@ -96,7 +96,7 @@ def find_root(fx, eps=1e-6):
     def f(x):
         return fx - count_integral(x)
 
-    left_bound = -5
+    left_bound = 0
     right_bound = 5
 
     if f(left_bound) == 0:
@@ -108,12 +108,13 @@ def find_root(fx, eps=1e-6):
     if f(right_bound) < f(left_bound):
         left_bound, right_bound = right_bound, left_bound
 
+    delt = right_bound - left_bound
+
     x = left_bound + (right_bound - left_bound) / 2
 
-    while abs(right_bound - left_bound) > eps:
-        dx = (right_bound - left_bound) / 2
+    while abs((right_bound - left_bound)) > eps * x + eps / 2:
 
-        x = left_bound + dx
+        x = (left_bound + right_bound) / 2
         if (np.sign(f(left_bound)) != np.sign(f(x))):
             right_bound = x
         else:
@@ -138,7 +139,9 @@ def der_equation_solution(n=100):
     y = [f(x) for x in omega]
     N = len(omega)
 
-    for _ in range(N):
+    delta_y = [1] * N
+
+    while (max([abs(delta_y[i] / y[i]) for i in range(N)])) >= 1e-6:
         ksi = [0 for _ in range(N - 1)]
         et = [0 for _ in range(N - 1)]
 
@@ -176,7 +179,7 @@ def main():
         map(lambda x: round(x, 6), system_solution(x_start=[-1, 0.1, 0.1]))))
 
     fx = float(input("Введите данное значение функции: "))
-    assert (fx < 0.5 and fx > -0.5)
+    assert (fx < 1 and fx > -1)
     print("Значение х для интеграла: ", find_root(fx))
 
     # x = np.linspace(-20, 20, 100)
