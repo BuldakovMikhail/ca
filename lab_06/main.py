@@ -106,8 +106,67 @@ def second_der(yn1, yn2, yn3, h):
     return (yn1 - 2 * yn2 + yn3) / h ** 2
 
 
+class Lishandr_Polynom:
+    def __init__(self, n, polinoms):
+        self.n = n
+        self.func = None
+
+
+def range_of_Polinoms(n):
+    polinoms = []
+    polinom = Lishandr_Polynom(0, polinoms)
+    polinoms.append(polinom)
+    for i in range(1, n):
+        polinom = Lishandr_Polynom(i, polinoms)
+        polinoms.append(polinom)
+
+    return polinoms
+
+
+def get_next_Lishandr_Polinom(polinoms, index):
+    def new_polinom(x):
+        return 1 / index * (polinoms[index - 1](x - 1) * (2 * index - 1) - (index - 1) * polinoms[index - 2](x))
+
+    return new_polinom
+
+
+def bisection(f, a, b, EPS=0.01, EPS_EXTRA=0.1):
+    if (f(a) * f(b) > 0):
+        # print("Неверно выбраны правая и левая части\n")
+        return None
+
+    c = a
+
+    while (abs(b - a) > EPS * abs(c) + EPS):
+
+        c = (a + b) / 2
+        if (f(c) == 0.0):
+            return c
+        if (f(c) * f(a) < 0):
+            b = c
+        else:
+            a = c
+
+    return c
+
+
+def find_roots(a, b, polinom, n):  # index == Кол-во корней
+    split_count = n
+    roots = []
+    while (len(roots) != n):
+        roots = []
+        splitters = np.linspace(a, b, num=split_count + 1)
+        for i in range(len(splitters) - 1):
+            root = bisection(polinom, splitters[i], splitters[i + 1])
+            if (root != None):
+                roots.append(root)
+
+        split_count = split_count * 2
+    return roots
+
+
 def main():
-    data = pd.read_csv('lab_06/data.csv', sep='\t', index_col=0, header=0)
+    data = pd.read_csv('./data.csv', sep='\t', index_col=0, header=0)
     data.columns = data.columns.values.astype(np.float64)
 
     aprox = Plane(np.log(data))
